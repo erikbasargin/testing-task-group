@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "testing-task-group",
+    platforms: [
+        .macOS(.v15),
+    ],
     products: [
         .library(
             name: "TestingTaskGroup",
@@ -13,14 +16,31 @@ let package = Package(
             ]
         ),
     ],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-async-algorithms.git", from: "1.0.0")
+    ],
     targets: [
         .target(
-            name: "TestingTaskGroup"
+            name: "TestingTaskGroup",
+            dependencies: [
+                "AsyncMaterializedSequence",
+            ]
+        ),
+        .target(
+            name: "AsyncMaterializedSequence"
         ),
         .testTarget(
             name: "TestingTaskGroupTests",
             dependencies: [
                 "TestingTaskGroup",
+                .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"),
+            ]
+        ),
+        .testTarget(
+            name: "AsyncMaterializedSequenceTests",
+            dependencies: [
+                "AsyncMaterializedSequence",
+                .product(name: "AsyncAlgorithms", package: "swift-async-algorithms"),
             ]
         ),
     ]
